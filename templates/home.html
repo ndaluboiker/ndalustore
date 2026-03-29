@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ndalustore - PC & Mobile Games</title>
+<style>
+/* ----------- COLORS & FONTS ----------- */
+:root {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --card-color: #1f1f1f;
+    --btn-color: #2979ff;
+    --footer-color: #1b1b1b;
+}
+body.light { --bg-color: #f4f4f4; --text-color: #000; --card-color: #fff; --footer-color: #eee; }
+body { margin:0; font-family: Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: all 0.3s;}
+header { display:flex; justify-content: space-between; align-items:center; padding:15px 20px; background:#1a1a1a; }
+header h1 { margin:0; color: #ff1744; }
+header input { padding:8px; border-radius:5px; border:none; width:200px;}
+.toggle-btn { cursor:pointer; padding:8px 12px; background:#ff1744; border:none; border-radius:5px; color:white;}
+
+/* ----------- GAMES GRID ----------- */
+section { padding:20px; }
+.games { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+.card { background: var(--card-color); border-radius:10px; overflow:hidden; padding:10px; transition: transform 0.2s;}
+.card img { width:100%; border-radius:5px; }
+.card h3 { margin:10px 0 5px; }
+.card p { margin:5px 0; font-size:0.9em; color:#aaa; }
+.card button { padding:8px 10px; border:none; border-radius:5px; background: var(--btn-color); color:white; cursor:pointer; width:100%; margin-top:5px; }
+
+/* ----------- TRENDING SECTION ----------- */
+.trending { margin-bottom:20px; }
+.trending h2 { margin-bottom:10px; color:#00e676; }
+.trending-list { display:flex; gap:10px; overflow-x:auto; }
+.trending-list .card { min-width:180px; flex-shrink:0; }
+
+/* ----------- FOOTER ----------- */
+footer { background: var(--footer-color); text-align:center; padding:20px; margin-top:30px; font-size:0.9em; color:#ccc;}
+footer a { color:#ff1744; text-decoration:none; margin:0 5px; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🎮 Ndalustore</h1>
+    <div>
+        <input id="search" placeholder="Search games...">
+        <button class="toggle-btn" onclick="toggleTheme()">🌗</button>
+    </div>
+</header>
+
+<!-- TRENDING SECTION -->
+<section class="trending">
+    <h2>🔥 Trending Games</h2>
+    <div class="trending-list">
+        {% for game in games[:5] %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='uploads/' + game.image) }}">
+            <h3>{{ game.name }}</h3>
+            <p>{{ game.download_count }} downloads</p>
+            <a href="/game/{{ game.id }}"><button>View</button></a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ALL GAMES -->
+<section class="games">
+    {% if games %}
+        {% for game in games %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='uploads/' + game.image) }}">
+            <h3>{{ game.name }}</h3>
+            <p>{{ game.category }}</p>
+            <p>🔥 {{ game.download_count }} downloads</p>
+            <a href="/game/{{ game.id }}"><button>View</button></a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No games uploaded yet. Admin must upload games.</p>
+    {% endif %}
+</section>
+
+<footer>
+    <p>Email: <a href="mailto:ndaluboiker3@gmail">ndaluboiker3@gmail</a></p>
+    <p>
+        Follow us:
+        <a href="#">Facebook</a> |
+        <a href="#">Instagram</a> |
+        <a href="#">Twitter</a>
+    </p>
+    <p>
+        <a href="/policy">Privacy Policy</a> | <a href="/terms">Terms</a>
+    </p>
+</footer>
+
+<!-- ---------- SCRIPTS ---------- -->
+<script>
+// DARK/LIGHT TOGGLE
+function toggleTheme(){
+    document.body.classList.toggle('light');
+}
+
+// SEARCH FUNCTION
+document.getElementById("search").addEventListener("keyup", function(){
+    let val = this.value.toLowerCase();
+    document.querySelectorAll(".games .card").forEach(c=>{
+        c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none";
+    });
+});
+
+// AUTO ADS POPUP (max 4 times, every 10s)
+let adCount=0;
+function showAd(){
+    if(adCount>=7) return;
+    let ad=document.createElement("div");
+    ad.innerHTML=`
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:white;
+    display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;">
+        <h2>Advertisement</h2>
+        <p>Wait 10 seconds or click Skip</p>
+        <button onclick="this.parentElement.parentElement.remove()">Skip</button>
+    </div>`;
+    document.body.appendChild(ad);
+    adCount++;
+}
+setInterval(showAd,10000);
+</script>
+
+</body>
+</html>
