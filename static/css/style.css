@@ -1,0 +1,45 @@
+body { background:#121212; color:white; font-family:Arial; margin:0; }
+
+body.light { background:white; color:black; }
+
+header {
+display:flex;
+justify-content:space-between;
+padding:10px;
+background:#1f1f1f;
+}
+
+body.light header { background:#ddd; }
+
+.games {
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+padding:20px;
+}
+
+.card {
+background:#1e1e1e;
+padding:10px;
+border-radius:10px;
+width:200px;
+}
+
+body.light .card { background:#f0f0f0; }
+
+img { width:100%; }
+
+button {
+background:#00c853;
+color:white;
+border:none;
+padding:5px;
+}
+
+footer {
+text-align:center;
+padding:20px;
+background:#1f1f1f;
+}
+
+body.light footer { background:#ddd; }

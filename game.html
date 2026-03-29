@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ game.name }} - Ndalustore</title>
+<style>
+:root {
+    --bg-color: #121212;
+    --text-color: #fff;
+    --card-color: #1f1f1f;
+    --btn-color: #2979ff;
+    --footer-color: #1b1b1b;
+}
+body.light { --bg-color: #f4f4f4; --text-color: #000; --card-color: #fff; --footer-color: #eee; }
+body { margin:0; font-family: Arial; background: var(--bg-color); color: var(--text-color); transition:0.3s;}
+header { display:flex; justify-content: space-between; padding:15px 20px; background:#1a1a1a; }
+header h1 { margin:0; color:#ff1744; }
+.toggle-btn { cursor:pointer; padding:8px 12px; background:#ff1744; border:none; border-radius:5px; color:white; }
+
+.container { padding:20px; max-width:900px; margin:auto; }
+img.game-img { width:100%; border-radius:10px; }
+h2, h3 { margin:10px 0; }
+button.download-btn { background: var(--btn-color); color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; width:100%; font-size:1em; }
+section.comments { margin-top:30px; }
+.comment-card { background: var(--card-color); padding:10px; border-radius:5px; margin-bottom:10px; }
+section.guide { margin-top:30px; }
+iframe { width:100%; height:400px; border:none; border-radius:10px; }
+footer { background: var(--footer-color); text-align:center; padding:20px; margin-top:30px; font-size:0.9em; color:#ccc; }
+footer a { color:#ff1744; text-decoration:none; margin:0 5px; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🎮 Ndalustore</h1>
+    <button class="toggle-btn" onclick="document.body.classList.toggle('light')">🌗</button>
+</header>
+
+<div class="container">
+    <img class="game-img" src="{{ url_for('static', filename='uploads/' + game.image) }}" alt="{{ game.name }}">
+    <h2>{{ game.name }}</h2>
+    <p>Category: {{ game.category }}</p>
+    <p>🔥 Downloads: {{ game.download_count }}</p>
+
+    <!-- DOWNLOAD BUTTON -->
+    <a href="/go/{{ game.id }}"><button class="download-btn">Download (Watch Ads)</button></a>
+
+    <!-- GUIDE/VIDEO SECTION -->
+    <section class="guide">
+        <h3>Guide / Video</h3>
+        {% if game.video %}
+        <iframe src="{{ game.video }}" allowfullscreen></iframe>
+        {% else %}
+        <p>No guide video uploaded for this game.</p>
+        {% endif %}
+    </section>
+
+    <!-- COMMENTS SECTION -->
+    <section class="comments">
+        <h3>Comments</h3>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Your name" required style="padding:8px;width:30%;margin-right:10px;">
+            <input type="text" name="comment" placeholder="Your comment" required style="padding:8px;width:50%;margin-right:10px;">
+            <button type="submit" style="padding:8px;">Post</button>
+        </form>
+        <div>
+            {% for c in comments %}
+            <div class="comment-card">
+                <strong>{{ c.username }}</strong>: {{ c.comment }}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>Email: <a href="mailto:ndaluboiker3@gmail">ndaluboiker3@gmail</a></p>
+    <p>
+        Follow:
+        <a href="#">Facebook</a> |
+        <a href="#">Instagram</a> |
+        <a href="#">Twitter</a>
+    </p>
+    <p>
+        <a href="/policy">Privacy Policy</a> | <a href="/terms">Terms</a>
+    </p>
+</footer>
+
+<!-- AUTO ADS POPUP -->
+<script>
+let adCount=0;
+function showAd(){
+    if(adCount>=7) return;
+    let ad=document.createElement("div");
+    ad.innerHTML=`
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:white;
+    display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;">
+        <h2>Advertisement</h2>
+        <p>Wait 10 seconds or click Skip</p>
+        <button onclick="this.parentElement.parentElement.remove()">Skip</button>
+    </div>`;
+    document.body.appendChild(ad);
+    adCount++;
+}
+setInterval(showAd,10000);
+</script>
+
+</body>
+</html>
